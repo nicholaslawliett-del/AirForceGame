@@ -1,126 +1,78 @@
-package airforce.core;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-
 import javax.swing.JPanel;
 
-import airforce.utils.Settings;
-
-/**
- * Mengatur game loop dan state management (menu, bermain, game over).
- * Anggota lain menambahkan logic render/update di method drawXxx() dan
- * bagian update() yang sudah ditandai TODO sesuai tanggung jawab masing-masing.
- */
 public class GameManager extends JPanel implements Runnable {
+    
+    // Mengatur Ukuran Layar Game (800 x 600 piksel)
+    final int screenWidth = 800;
+    final int screenHeight = 600;
+    
+    // Jantung Game (Thread & Game Loop)
+    Thread gameThread;
+    final int FPS = 60; // Game berjalan stabil di 60 Frame Per Second
 
-    public enum GameState {
-        MENU,
-        PLAYING,
-        GAME_OVER
-    }
-
-    private Thread gameThread;
-    private boolean isRunning;
-    private GameState currentState;
-
+    // Constructor
     public GameManager() {
-        setPreferredSize(new Dimension(Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT));
-        setBackground(Color.BLACK);
-        setFocusable(true);
-        currentState = GameState.MENU;
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setBackground(Color.BLACK); // Layar dasar warna hitam (luar angkasa)
+        this.setDoubleBuffered(true);
+        this.setFocusable(true);
     }
 
-    public void startGame() {
-        isRunning = true;
+    // Fungsi untuk memulai thread game
+    public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
     @Override
     public void run() {
-        double drawInterval = 1_000_000_000.0 / Settings.FPS;
-        double delta = 0;
-        long lastTime = System.nanoTime();
+        // Logika pembatas FPS agar game tidak berjalan terlalu cepat / lambat
+        double drawInterval = 1000000000 / FPS;
+        double nextDrawTime = System.nanoTime() + drawInterval;
 
-        while (isRunning) {
-            long currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            lastTime = currentTime;
+        while (gameThread != null) {
+            // 1. UPDATE: Menghitung ulang logika game (posisi pesawat, peluru, musuh)
+            update();
+            
+            // 2. REPAINT: Menggambar ulang tampilan ke layar monitor
+            repaint();
 
-            if (delta >= 1) {
-                update();
-                repaint();
-                delta--;
+            try {
+                double remainingTime = nextDrawTime - System.nanoTime();
+                remainingTime = remainingTime / 1000000; // Ubah ke milidetik
+
+                if (remainingTime < 0) {
+                    remainingTime = 0;
+                }
+
+                Thread.sleep((long) remainingTime);
+                nextDrawTime += drawInterval;
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    private void update() {
-        switch (currentState) {
-            case MENU:
-                // TODO (Anggota 3): update logic tombol Start/Exit di MainMenu
-                break;
-            case PLAYING:
-                // TODO (Anggota 2): update PlayerPlane, EnemyBlue/Green, BulletPlayer/Enemy
-                // TODO (Anggota 1): integrasi collision detection antar objek
-                break;
-            case GAME_OVER:
-                // TODO (Anggota 3): update logic tombol restart di GameOverScreen
-                break;
-        }
+    // Tempat untuk memperbarui logika pergerakan game
+    public void update() {
+        // TODO: Nanti logika pergerakan player dan musuh ditaruh di sini
     }
 
+    // Tempat untuk menggambar komponen visual game
     @Override
-    public void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
 
-        // WAJIB: antialiasing aktif di seluruh proses render (syarat tugas)
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        // Sementara menggambar teks putih sebagai penanda game jalan
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("Winger Shooter: Game Loop Berjalan! Siap Diisi Pesawat.", 50, 50);
 
-        switch (currentState) {
-            case MENU:
-                drawMenu(g2);
-                break;
-            case PLAYING:
-                drawGameplay(g2);
-                break;
-            case GAME_OVER:
-                drawGameOver(g2);
-                break;
-        }
-        g2.dispose();
-    }
-
-    private void drawMenu(Graphics2D g2) {
-        // TODO (Anggota 3): render MainMenu (background, button start, button exit)
-        g2.setColor(Color.WHITE);
-        g2.drawString("AIRFORCE SHOOTER - Tekan ENTER untuk mulai", 60, Settings.SCREEN_HEIGHT / 2);
-    }
-
-    private void drawGameplay(Graphics2D g2) {
-        // TODO (Anggota 2): render PlayerPlane, EnemyBlue, EnemyGreen, BulletPlayer, BulletEnemy
-        // TODO (Anggota 3): render HUD (HP & Score)
-        g2.setColor(Color.WHITE);
-        g2.drawString("Gameplay placeholder", 150, Settings.SCREEN_HEIGHT / 2);
-    }
-
-    private void drawGameOver(Graphics2D g2) {
-        // TODO (Anggota 3): render GameOverScreen (skor akhir, tombol restart)
-        g2.setColor(Color.WHITE);
-        g2.drawString("GAME OVER", 180, Settings.SCREEN_HEIGHT / 2);
-    }
-
-    public void setState(GameState state) {
-        this.currentState = state;
-    }
-
-    public GameState getState() {
-        return currentState;
+        g2d.dispose();
     }
 }
