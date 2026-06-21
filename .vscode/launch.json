@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "airforce.core.Main",
+            "projectName": "AirForceGame_1bd75a2b"
+        },
+        {
+            "name": "Run",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "airforce.core.Main",
+            "projectName": "AirForceGame",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        }
+    ]
+}

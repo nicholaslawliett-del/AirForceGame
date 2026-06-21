@@ -1,0 +1,25 @@
+# Compiled Java files
+bin/
+*.class
+*.jar
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Project specific
+*.log
