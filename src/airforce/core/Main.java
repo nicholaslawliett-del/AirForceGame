@@ -1,22 +1,22 @@
-package airforce.core;
-
 import javax.swing.JFrame;
 
-/**
- * Entry point program. Jalankan file ini untuk membuka game.
- */
-public class main {
+public class Main {
     public static void main(String[] args) {
-        JFrame window = new JFrame("AirForce Shooter");
-        GameManager gameManager = new GameManager();
-
-        window.add(gameManager);
+        // 1. Membuat jendela game
+        JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.pack();
-        window.setLocationRelativeTo(null);
+        window.setTitle("Winger Shooter Duar Duar");
+
+        // 2. Memanggil dan memasukkan GameManager ke dalam jendela
+        GameManager gameManager = new GameManager();
+        window.add(gameManager);
+
+        window.pack(); // Menyesuaikan ukuran jendela dengan GameManager (800x600)
+        window.setLocationRelativeTo(null); // Jendela otomatis di tengah layar
         window.setVisible(true);
 
-        gameManager.startGame();
+        // 3. Menjalankan Jantung Game (Game Loop)
+        gameManager.startGameThread();
     }
 }
