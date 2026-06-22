@@ -6,6 +6,13 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "airforce.core.Main",
+            "projectName": "AirForceGame_982f0f69"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "airforce.core.Main",
             "projectName": "AirForceGame_1bd75a2b"
         },
         {

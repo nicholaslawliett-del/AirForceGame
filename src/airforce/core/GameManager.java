@@ -1,5 +1,11 @@
 package airforce.core;
 
+import airforce.entities.BulletEnemy;
+import airforce.entities.BulletPlayer;
+import airforce.entities.EnemyBlue;
+import airforce.entities.EnemyGreen;
+import airforce.entities.PlayerPlane;
+import airforce.utils.Settings;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,15 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JPanel;
-
-import airforce.entities.BulletEnemy;
-import airforce.entities.BulletPlayer;
-import airforce.entities.EnemyBlue;
-import airforce.entities.EnemyGreen;
-import airforce.entities.PlayerPlane;
-import airforce.utils.Settings;
 
 /**
  * Mengatur game loop, state management, input handling, dan collision
